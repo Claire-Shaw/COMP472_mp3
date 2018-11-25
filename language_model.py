@@ -44,7 +44,7 @@ class LanguageModel:
 
 
     def generate_unigram_model(self, processed_data):
-		'''Converts cleaned training data to lowercase, removes all punctuation and whitespace'''
+        print("Generating unigram model")
 
 		### Build our dict of letter counts
 		### At first, our model will contain the raw counts of letters seen in the training data
@@ -60,8 +60,22 @@ class LanguageModel:
 			self.unigram_model[key] = math.log((value + self.delta) / (total_letters + self.delta * total_bins), 10)
 		
 	
-    def generate_bigram_model(self, clean_corp):
+    def generate_bigram_model(self, processed_data):
 		print("Generating bigram model")
+
+		### Build our dict of bigram counts
+		### At first, our model will contain the raw counts of letters seen in the training data
+		### This will be converted to log of probabilities later
+        bigrams = utility_functions.generate_bigrams(processed_data)
+		for bigram in bigrams:
+			self.bigram_model[bigram] += 1
+			
+		total_bigrams = len(bigrams)
+        total_bins = len(self.bigram_model)
+
+		### Convert our raw counts to log of probabilities (base 10) after performing add-delta smoothing
+		for key, value in self.bigram_model:
+			self.bigram_model[key] = math.log((value + self.delta) / (total_bigrams + self.delta * total_bins), 10)
 	
 
     def unigram_model_dump(self):
