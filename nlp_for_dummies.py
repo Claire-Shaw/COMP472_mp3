@@ -2,8 +2,9 @@ import os
 import string
 import re
 import pandas as pd
+import math
 import language_model
-
+import utility_functions
 
 def data_prep():
 	### Get all corpora files
@@ -46,3 +47,12 @@ def clean_text(raw):
 data = data_prep()
 french_model = language_model.LanguageModel('FRENCH')
 french_model.generate_model(data['fr'])
+english_model = language_model.LanguageModel('ENGLISH')
+english_model.generate_model(data['en'])
+probability_en = 0
+probability_fr = 0
+for bigram in utility_functions.generate_bigrams("loiseauvole"):
+	print("BIGRAM : " + bigram)
+	probability_en += math.log(english_model.predict_bigram(bigram), 10)
+	probability_fr += math.log(french_model.predict_bigram(bigram), 10)
+	print("French: {} English: {}".format(probability_fr,probability_en))
