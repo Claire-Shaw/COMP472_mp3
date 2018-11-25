@@ -3,12 +3,6 @@ import string
 import re
 import pandas as pd
 
-def generate_model():
-	### Get dictionary of all three corpora cleaned
-	clean_corp = data_prep()
-
-def predict(sentence):
-	print()
 
 def data_prep():
 	### Get all corpora files
