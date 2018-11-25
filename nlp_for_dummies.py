@@ -2,6 +2,7 @@ import os
 import string
 import re
 import pandas as pd
+import language_model
 
 
 def data_prep():
@@ -38,6 +39,10 @@ def clean_text(raw):
 	df['text'] = df['text'].apply(lambda x: re.sub(r"\d", "", x))
 	clean_df = df.groupby('lang').agg(lambda x: x.sum())
 	clean_dict = dict([(x,y) for x, y in zip(df.lang, df.text)])
-	print(clean_dict['es'])
+
 	return clean_dict
-data_prep()
+
+
+data = data_prep()
+french_model = language_model.LanguageModel('FRENCH')
+french_model.generate_model(data['fr'])
