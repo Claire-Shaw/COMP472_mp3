@@ -32,11 +32,12 @@ def get_raw_corpora(file_names):
 def clean_text(raw):
 	### Set to lowercase
 	df = raw
+	df['text'] = df['text'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
 	df['text'] = df['text'].apply(lambda x: x.lower())
 	df['text'] = df['text'].apply(lambda x: re.sub(r"\W", "", x))
-	df['text'] = df['text'].str.normalize('NFKD').str.encode('ascii', errors='ignore').str.decode('utf-8')
+	df['text'] = df['text'].apply(lambda x: re.sub(r"\d", "", x))
 	clean_df = df.groupby('lang').agg(lambda x: x.sum())
 	clean_dict = dict([(x,y) for x, y in zip(df.lang, df.text)])
-
+	print(clean_dict['es'])
 	return clean_dict
 data_prep()
