@@ -43,3 +43,11 @@ def clean_text(raw):
 	clean_dict = dict([(x,y) for x, y in zip(df.lang, df.text)])
 
 	return clean_dict
+
+def clean_sentence(raw):
+	clean = raw.encode('ascii', errors='ignore').decode('utf-8')
+	clean = clean.lower()
+	clean = re.sub(r"\W", "", clean)
+	clean = re.sub(r"\d", "", clean)
+	clean = re.sub("_", "", clean)
+	return clean

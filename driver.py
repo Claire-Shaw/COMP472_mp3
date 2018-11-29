@@ -27,7 +27,7 @@ def main():
 					sentence_buffer = [line.strip() for line in file]
 
 				for index, sentence in enumerate(sentence_buffer):
-					predict(sentence, index, models)
+					predict(sentence, index+1, models)
 
 		elif input_op == '3':
 			if not models:
@@ -68,10 +68,12 @@ def predict(sentence, index, models):
 
 	with open(out_file, 'w') as file:
 		file.write(sentence)
-
-		file.write("UNIGRAM MODEL")
-		for unigram in list(sentence):
-			file.write("\nUNIGRAM: " + unigram)
+		clean_sentence = nlp_for_dummies.clean_sentence(sentence)
+		
+		file.write("\n\n")
+		file.write("UNIGRAM MODEL:\n")
+		for unigram in list(clean_sentence):
+			file.write("\nUNIGRAM: " + unigram +"\n")
 			
 			### Single unigram probabilities
 			prob_fr = models['fr'].predict_unigram(unigram)
@@ -82,9 +84,9 @@ def predict(sentence, index, models):
 			probability_uni_en += math.log10(prob_en)
 			probability_uni_ot += math.log10(prob_ot)
 
-			file.write("FRENCH: P({}) = {} ==> log prob of sentence so far: {}".format(unigram, prob_fr, probability_uni_fr))
-			file.write("ENGLISH: P({}) = {} ==> log prob of sentence so far: {}".format(unigram, prob_en, probability_uni_en))
-			file.write("OTHER: P({}) = {} ==> log prob of sentence so far: {}".format(unigram, prob_ot, probability_uni_ot))
+			file.write("FRENCH: P({}) = {} ==> log prob of sentence so far: {}\n".format(unigram, prob_fr, probability_uni_fr))
+			file.write("ENGLISH: P({}) = {} ==> log prob of sentence so far: {}\n".format(unigram, prob_en, probability_uni_en))
+			file.write("OTHER: P({}) = {} ==> log prob of sentence so far: {}\n".format(unigram, prob_ot, probability_uni_ot))
 
 		file.write("\n")	
 
@@ -95,12 +97,12 @@ def predict(sentence, index, models):
 		else:
 			winning_language = models['es'].get_language_name()
 
-		file.write("According to the unigram model, the sentence is in " + winning_language)
-		file.write("----------------")
+		file.write("According to the unigram model, the sentence is in " + winning_language + "\n")
+		file.write("----------------\n")
 
-		file.write("BIGRAM MODEL")
-		for bigram in utility_functions.generate_bigrams(sentence):
-			file.write("\nBIGRAM: " + unigram)
+		file.write("BIGRAM MODEL:\n")
+		for bigram in utility_functions.generate_bigrams(clean_sentence):
+			file.write("\nBIGRAM: " + bigram + "\n")
 			
 			### Single bigram probabilities
 			prob_fr = models['fr'].predict_bigram(bigram)
@@ -111,9 +113,9 @@ def predict(sentence, index, models):
 			probability_bi_en += math.log10(prob_en)
 			probability_bi_ot += math.log10(prob_ot)
 
-			file.write("FRENCH: P({}|{}) = {} ==> log prob of sentence so far: {}".format(bigram[1], bigram[0], prob_fr, probability_bi_fr))
-			file.write("ENGLISH: P({}|{}) = {} ==> log prob of sentence so far: {}".format(bigram[1], bigram[0], prob_en, probability_bi_en))
-			file.write("OTHER: P({}|{}) = {} ==> log prob of sentence so far: {}".format(bigram[1], bigram[0], prob_ot, probability_bi_fr))
+			file.write("FRENCH: P({}|{}) = {} ==> log prob of sentence so far: {}\n".format(bigram[1], bigram[0], prob_fr, probability_bi_fr))
+			file.write("ENGLISH: P({}|{}) = {} ==> log prob of sentence so far: {}\n".format(bigram[1], bigram[0], prob_en, probability_bi_en))
+			file.write("OTHER: P({}|{}) = {} ==> log prob of sentence so far: {}\n".format(bigram[1], bigram[0], prob_ot, probability_bi_fr))
 
 		file.write("\n")
 
