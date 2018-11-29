@@ -9,11 +9,14 @@ class LanguageModel:
 		### Delta for smoothing
 		self.delta = 0.5
 
-		if(language_name == "ENGLISH"):
+		if(language_name == "English"):
+			self.language_name = language_name
 			self.language_code = "EN"
-		elif(language_name == "FRENCH"):
+		elif(language_name == "French"):
+			self.language_name = language_name
 			self.language_code = "FR"
 		else:
+			self.language_name = language_name
 			self.language_code = "OT"
 		
 		### Output files for language model dump 
@@ -103,3 +106,7 @@ class LanguageModel:
 	def predict_bigram(self, bigram):
 		probability = self.bigram_model[bigram]
 		return probability
+
+
+	def get_language_name(self):
+		return self.language_name

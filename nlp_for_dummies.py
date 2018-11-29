@@ -38,31 +38,8 @@ def clean_text(raw):
 	df['text'] = df['text'].apply(lambda x: x.lower())
 	df['text'] = df['text'].apply(lambda x: re.sub(r"\W", "", x))
 	df['text'] = df['text'].apply(lambda x: re.sub(r"\d", "", x))
+	df['text'] = df['text'].apply(lambda x: re.sub("_", "", x))
 	clean_df = df.groupby('lang').agg(lambda x: x.sum())
 	clean_dict = dict([(x,y) for x, y in zip(df.lang, df.text)])
 
 	return clean_dict
-
-
-data = data_prep()
-french_model = language_model.LanguageModel('FRENCH')
-french_model.generate_model(data['fr'])
-english_model = language_model.LanguageModel('ENGLISH')
-english_model.generate_model(data['en'])
-probability_en = 0
-probability_fr = 0
-print("!!!!!!!!!!!!!!!!!UNIGRAMS!!!!!!!!!!!!!!")
-for unigram in list('loiseauvole'):
-	print("UNIGRAM : " + unigram)
-	probability_en += math.log(english_model.predict_unigram(unigram), 10)
-	probability_fr += math.log(french_model.predict_unigram(unigram), 10)
-	print("French: {} English: {}".format(probability_fr,probability_en))
-
-print("!!!!!!!!!!!!!!!!!BIGRAMS!!!!!!!!!!!!!!")
-probability_en = 0
-probability_fr = 0
-for bigram in utility_functions.generate_bigrams("loiseauvole"):
-	print("BIGRAM : " + bigram)
-	probability_en += math.log(english_model.predict_bigram(bigram), 10)
-	probability_fr += math.log(french_model.predict_bigram(bigram), 10)
-	print("French: {} English: {}".format(probability_fr,probability_en))
