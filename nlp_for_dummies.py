@@ -51,6 +51,16 @@ english_model = language_model.LanguageModel('ENGLISH')
 english_model.generate_model(data['en'])
 probability_en = 0
 probability_fr = 0
+print("!!!!!!!!!!!!!!!!!UNIGRAMS!!!!!!!!!!!!!!")
+for unigram in list('loiseauvole'):
+	print("UNIGRAM : " + unigram)
+	probability_en += math.log(english_model.predict_unigram(unigram), 10)
+	probability_fr += math.log(french_model.predict_unigram(unigram), 10)
+	print("French: {} English: {}".format(probability_fr,probability_en))
+
+print("!!!!!!!!!!!!!!!!!BIGRAMS!!!!!!!!!!!!!!")
+probability_en = 0
+probability_fr = 0
 for bigram in utility_functions.generate_bigrams("loiseauvole"):
 	print("BIGRAM : " + bigram)
 	probability_en += math.log(english_model.predict_bigram(bigram), 10)
