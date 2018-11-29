@@ -68,6 +68,8 @@ def predict(sentence, index, models):
 
 	with open(out_file, 'w') as file:
 		file.write(sentence)
+		print('"' + sentence + '"')
+
 		clean_sentence = nlp_for_dummies.clean_sentence(sentence)
 		
 		file.write("\n\n")
@@ -98,6 +100,8 @@ def predict(sentence, index, models):
 			winning_language = models['es'].get_language_name()
 
 		file.write("According to the unigram model, the sentence is in " + winning_language + "\n")
+		print("According to the unigram model, the sentence is in " + winning_language)
+		
 		file.write("----------------\n")
 
 		file.write("BIGRAM MODEL:\n")
@@ -127,6 +131,7 @@ def predict(sentence, index, models):
 			winning_language = models['es'].get_language_name()
 
 		file.write("According to the bigram model, the sentence is in " + winning_language)
+		print("According to the bigram model, the sentence is in " + winning_language + "\n")
 
 
 
