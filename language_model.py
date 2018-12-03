@@ -1,6 +1,7 @@
 import string 
 import itertools
 import math
+import operator
 
 import utility_functions
 
@@ -22,6 +23,10 @@ class LanguageModel:
 		### Output files for language model dump 
 		self.unigram_model_dump = "output/unigram" + self.language_code + ".txt"
 		self.bigram_model_dump = "output/bigram" + self.language_code + ".txt"
+
+		### Output files for sorted langauage model dump
+		self.sorted_unigram_dump = "test_output/sortedUnigram" + self.language_code + ".txt"
+		self.sorted_bigram_dump = "test_output/sortedBigram" + self.language_code + ".txt"
 
         ### Dictionaries for storing our unigram and bigram models
 		all_lowercase_letters = string.ascii_lowercase
@@ -90,12 +95,28 @@ class LanguageModel:
 				file.write("P({}) = {}\n".format(key, value))
 		print("{} unigram model has been dumped to {}".format(self.language_code, self.unigram_model_dump))
 
+		### Sort our unigram model and dump it to the test_output folder
+		with open(self.sorted_unigram_dump, 'w') as file:
+			sorted_unigram_model = sorted(self.unigram_model.items(), key=operator.itemgetter(1))
+			for x in sorted_unigram_model:
+				file.write("{} = {}\n".format(x[0], x[1]))
+		print("SORTED {} unigram model has been dumped to {}".format(self.language_code, self.sorted_unigram_dump))
+
+
 
 	def dump_bigram_model(self):
-	    with open(self.bigram_model_dump, 'w') as file:
+		with open(self.bigram_model_dump, 'w') as file:
 		    for key, value in self.bigram_model.items():
 			    file.write("P({}|{}) = {}\n".format(key[1], key[0], value))
-	    print("{} bigram model has been dumped to {}".format(self.language_code, self.bigram_model_dump))
+		print("{} bigram model has been dumped to {}".format(self.language_code, self.bigram_model_dump))
+		
+		### Sort our bigram model and dump it to the test_output folder
+		with open(self.sorted_bigram_dump, 'w') as file:
+			sorted_bigram_model = sorted(self.bigram_model.items(), key=operator.itemgetter(1))
+			for x in sorted_bigram_model:
+				file.write("{} = {}\n".format(x[0], x[1]))
+		print("SORTED {} bigram model has been dumped to {}".format(self.language_code, self.sorted_bigram_dump))
+
     
     
 	def predict_unigram(self, letter):
