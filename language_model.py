@@ -7,7 +7,7 @@ import utility_functions
 class LanguageModel:
 	def __init__(self, language_name):
 		### Delta for smoothing
-		self.delta = 0.5
+		self.delta = 0.000001
 
 		if(language_name == "English"):
 			self.language_name = language_name
