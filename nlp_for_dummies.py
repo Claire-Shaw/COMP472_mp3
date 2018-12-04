@@ -15,6 +15,13 @@ def data_prep():
 	raw_corpora = get_raw_corpora(file_names)
 	clean_corpora = clean_text(raw_corpora)
 
+	### experiment
+	# for key in clean_corpora:
+	# 	clean_corpora[key] = clean_corpora[key][0:500000]
+
+	# for key in clean_corpora:
+	# 	print(key + ' ', len(clean_corpora[key]))
+
 	return clean_corpora
 
 def get_raw_corpora(file_names):
@@ -27,6 +34,7 @@ def get_raw_corpora(file_names):
 			if lang == f[0:2]:
 				with open('./data/' + f, 'r') as file:
 					dirty_corpora.append( (lang, file.read()) )
+
 	dirty_df = pd.DataFrame(dirty_corpora, columns=['lang', 'text'])
 
 	return dirty_df
@@ -39,7 +47,8 @@ def clean_text(raw):
 	df['text'] = df['text'].apply(lambda x: re.sub(r"\W", "", x))
 	df['text'] = df['text'].apply(lambda x: re.sub(r"\d", "", x))
 	df['text'] = df['text'].apply(lambda x: re.sub("_", "", x))
-	clean_df = df.groupby('lang').agg(lambda x: x.sum())
+	df['text'] = df.groupby('lang').transform(lambda x: ''.join(x))
+	df = df.drop_duplicates()
 	clean_dict = dict([(x,y) for x, y in zip(df.lang, df.text)])
 
 	return clean_dict
