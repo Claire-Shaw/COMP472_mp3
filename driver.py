@@ -131,7 +131,37 @@ def predict(sentence, index, models):
 			winning_language = models['es'].get_language_name()
 
 		file.write("According to the bigram model, the sentence is in " + winning_language)
-		print("According to the bigram model, the sentence is in " + winning_language + "\n")
+		print("According to the bigram model, the sentence is in " + winning_language)
+
+		predict_trigram(models, clean_sentence)
+
+def predict_trigram(models, clean_sentence):
+	
+	probability_tri_fr = 0
+	probability_tri_en = 0
+	probability_tri_ot = 0
+
+	for trigram in utility_functions.generate_trigrams(clean_sentence):
+				
+		### Single trigram probabilities
+		prob_fr = models['fr'].predict_trigram(trigram)
+		prob_en = models['en'].predict_trigram(trigram)
+		prob_ot = models['es'].predict_trigram(trigram)
+		
+		### Cumulative probablities
+		probability_tri_fr += math.log10(prob_fr)
+		probability_tri_en += math.log10(prob_en)
+		probability_tri_ot += math.log10(prob_ot)
+	
+
+		if probability_tri_fr >= probability_tri_en and probability_tri_fr >= probability_tri_ot:
+			winning_language = models['fr'].get_language_name()
+		elif probability_tri_en >= probability_tri_ot:
+			winning_language = models['en'].get_language_name()
+		else:
+			winning_language = models['es'].get_language_name()
+
+	print("According to the trigram model, the sentence is in " + winning_language + "\n")
 
 
 
